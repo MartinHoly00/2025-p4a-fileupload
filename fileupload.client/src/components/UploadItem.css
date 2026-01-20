@@ -1,0 +1,60 @@
+.upload-item {
+  padding: 20px;
+  border-bottom: 2px solid var(--border);
+}
+
+.upload-item:last-child {
+  border-bottom: none;
+}
+
+.upload-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.upload-name {
+  font-weight: 700;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+}
+
+.upload-status {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-gray);
+}
+
+.upload-item.complete .upload-status {
+  color: var(--primary);
+}
+
+.upload-item.error .upload-status {
+  color: var(--accent);
+}
+
+.progress-bar {
+  height: 12px;
+  background: var(--bg-darker);
+  border: 2px solid var(--text-white);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+
+.upload-item.complete .progress-fill {
+  background: var(--primary);
+}
+
+.upload-item.error .progress-fill {
+  background: var(--accent);
+}

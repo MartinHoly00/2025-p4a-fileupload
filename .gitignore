@@ -98,6 +98,9 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+#tus
+tus-state/
+
 # Chutzpah Test files
 _Chutzpah*
 

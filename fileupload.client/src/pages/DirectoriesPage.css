@@ -4,105 +4,78 @@
   padding: 40px 20px;
 }
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.page-header h1 {
-  font-size: 2rem;
-  background: linear-gradient(90deg, #00d9ff, #00ff88);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0;
-}
-
-.nav-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.nav-link {
-  color: #00d9ff;
-  text-decoration: none;
-  padding: 8px 16px;
-  border: 1px solid #00d9ff;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-
-.nav-link:hover {
-  background: rgba(0, 217, 255, 0.1);
-}
-
+/* Loading & Error */
 .loading,
 .error {
   text-align: center;
-  padding: 60px;
-  color: #888;
+  padding: 80px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-gray);
 }
 
 .error {
-  color: #ff6b6b;
+  color: var(--accent);
 }
 
+/* Empty State */
 .empty-state {
   text-align: center;
   padding: 80px 20px;
-  color: #888;
+  border: 4px dashed var(--border);
+  background: var(--bg-dark);
 }
 
 .empty-icon {
-  font-size: 4rem;
+  font-size: 5rem;
   display: block;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  text-shadow: 4px 4px 0 var(--primary);
 }
 
-.create-link {
-  display: inline-block;
-  margin-top: 16px;
-  color: #00d9ff;
-  text-decoration: none;
-  padding: 12px 24px;
-  border: 1px solid #00d9ff;
-  border-radius: 8px;
-  transition: all 0.2s;
+.empty-state p {
+  font-size: 1.2rem;
+  color: var(--text-gray);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
 }
 
-.create-link:hover {
-  background: rgba(0, 217, 255, 0.1);
-}
-
+/* Directories Grid */
 .directories-grid {
   display: grid;
-  gap: 16px;
+  gap: 0;
+  border: 4px solid var(--text-white);
+  box-shadow: 8px 8px 0 var(--primary);
+  background: var(--bg-dark);
 }
 
 .directory-card {
   display: flex;
   align-items: center;
-  gap: 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  gap: 20px;
   padding: 20px 24px;
+  border-bottom: 2px solid var(--border);
   text-decoration: none;
   color: inherit;
-  transition: all 0.2s;
+  transition: all 0.15s ease;
+}
+
+.directory-card:last-child {
+  border-bottom: none;
 }
 
 .directory-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  transform: translateX(4px);
+  background: var(--bg-darker);
+  padding-left: 32px;
 }
 
 .directory-icon {
   font-size: 2.5rem;
   flex-shrink: 0;
+  text-shadow: 2px 2px 0 var(--accent);
 }
 
 .directory-info {
@@ -111,33 +84,36 @@
 }
 
 .directory-name {
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 6px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .file-count {
-  font-size: 0.9rem;
-  color: #888;
+  font-size: 0.85rem;
+  color: var(--text-gray);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .directory-arrow {
   font-size: 1.5rem;
-  color: #00d9ff;
-  opacity: 0;
-  transition: opacity 0.2s;
+  color: var(--primary);
+  font-weight: 900;
 }
 
-.directory-card:hover .directory-arrow {
-  opacity: 1;
-}
-
+/* Directories Count */
 .directories-count {
   text-align: center;
   margin-top: 32px;
-  color: #666;
+  padding: 16px;
+  border: 3px solid var(--border);
+  color: var(--text-gray);
   font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }

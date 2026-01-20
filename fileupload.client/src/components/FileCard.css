@@ -1,0 +1,99 @@
+.file-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  border-bottom: 2px solid var(--border);
+  transition: all 0.15s ease;
+}
+
+.file-card:last-child {
+  border-bottom: none;
+}
+
+.file-card:hover {
+  background: var(--bg-darker);
+  padding-left: 32px;
+}
+
+.file-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  text-shadow: 2px 2px 0 var(--accent);
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-details {
+  display: flex;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: var(--text-gray);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.file-ext {
+  background: var(--primary);
+  color: var(--bg-darker);
+  padding: 4px 10px;
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.file-status {
+  margin-top: 8px;
+}
+
+.status {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status.complete {
+  color: var(--primary);
+}
+
+.status.pending {
+  color: var(--accent);
+}
+
+.file-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-darker);
+  border: 3px solid var(--text-white);
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1.3rem;
+  transition: all 0.15s ease;
+}
+
+.action-btn:hover {
+  background: var(--accent);
+  box-shadow: 3px 3px 0 var(--primary);
+  transform: translate(-2px, -2px);
+}

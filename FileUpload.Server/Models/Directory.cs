@@ -9,6 +9,8 @@ namespace FileUpload.Server.Models
         
         [JsonIgnore]
         public ICollection<DataFile> Files { get; set; } = new List<DataFile>();
+
+        // Computed property for file count (included in JSON)
+        public int FileCount => Files?.Count ?? 0;
     }
 }
-

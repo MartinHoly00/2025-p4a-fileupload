@@ -1,6 +1,9 @@
 import { useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import * as tus from 'tus-js-client';
+import Header from '../components/Header';
+import Dropzone from '../components/Dropzone';
+import UploadItem from '../components/UploadItem';
+import Button from '../components/Button';
 import './UploadPage.css';
 
 interface UploadProgress {
@@ -12,10 +15,9 @@ interface UploadProgress {
 
 function UploadPage() {
   const [uploads, setUploads] = useState<UploadProgress[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
 
-  const handleFiles = useCallback((files: FileList | File[]) => {
-    Array.from(files).forEach((file) => {
+  const handleFilesSelected = useCallback((files: File[]) => {
+    files.forEach((file) => {
       setUploads((prev) => [
         ...prev,
         { fileName: file.name, progress: 0, status: 'uploading' },
@@ -61,95 +63,33 @@ function UploadPage() {
     });
   }, []);
 
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragging(false);
-      if (e.dataTransfer.files.length > 0) {
-        handleFiles(e.dataTransfer.files);
-      }
-    },
-    [handleFiles]
-  );
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  }, []);
-
-  const handleFileInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files && e.target.files.length > 0) {
-        handleFiles(e.target.files);
-      }
-    },
-    [handleFiles]
-  );
-
   const clearCompleted = () => {
     setUploads((prev) => prev.filter((u) => u.status === 'uploading'));
   };
 
   return (
     <div className="upload-page">
-      <header className="page-header">
-        <h1>📁 File Upload</h1>
-        <Link to="/files" className="nav-link">
-          View All Files →
-        </Link>
-      </header>
+      <Header title="Nalož" highlightedText=".to" />
       <p className="subtitle">Drag & drop files or click to browse</p>
 
-      <div
-        className={`dropzone ${isDragging ? 'dragging' : ''}`}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-      >
-        <input
-          type="file"
-          id="fileInput"
-          multiple
-          onChange={handleFileInput}
-          hidden
-        />
-        <label htmlFor="fileInput" className="dropzone-label">
-          <span className="dropzone-icon">📤</span>
-          <span>Drop files here or click to upload</span>
-          <span className="dropzone-hint">All file types supported</span>
-        </label>
-      </div>
+      <Dropzone onFilesSelected={handleFilesSelected} />
 
       {uploads.length > 0 && (
         <div className="uploads-list">
           <div className="uploads-header">
             <h2>Uploads</h2>
-            <button onClick={clearCompleted} className="clear-btn">
-              Clear Completed
-            </button>
+            <Button variant="secondary" onClick={clearCompleted}>
+              Clear Done
+            </Button>
           </div>
           {uploads.map((upload, index) => (
-            <div key={index} className={`upload-item ${upload.status}`}>
-              <div className="upload-info">
-                <span className="upload-name">{upload.fileName}</span>
-                <span className="upload-status">
-                  {upload.status === 'uploading' && `${upload.progress}%`}
-                  {upload.status === 'complete' && '✓ Complete'}
-                  {upload.status === 'error' && `✗ ${upload.error}`}
-                </span>
-              </div>
-              <div className="progress-bar">
-                <div
-                  className="progress-fill"
-                  style={{ width: `${upload.progress}%` }}
-                />
-              </div>
-            </div>
+            <UploadItem
+              key={index}
+              fileName={upload.fileName}
+              progress={upload.progress}
+              status={upload.status}
+              error={upload.error}
+            />
           ))}
         </div>
       )}

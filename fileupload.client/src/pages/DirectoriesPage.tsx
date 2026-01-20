@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Header from '../components/Header';
 import './DirectoriesPage.css';
 
 interface Directory {
   id: number;
   name: string;
-  files: { uuid: string }[];
+  fileCount: number;
 }
 
 function DirectoriesPage() {
@@ -35,6 +36,7 @@ function DirectoriesPage() {
   if (loading) {
     return (
       <div className="directories-page">
+        <Header title="All" highlightedText=" Directories" />
         <div className="loading">Loading directories...</div>
       </div>
     );
@@ -43,6 +45,7 @@ function DirectoriesPage() {
   if (error) {
     return (
       <div className="directories-page">
+        <Header title="All" highlightedText=" Directories" />
         <div className="error">Error: {error}</div>
       </div>
     );
@@ -50,19 +53,13 @@ function DirectoriesPage() {
 
   return (
     <div className="directories-page">
-      <header className="page-header">
-        <h1>📁 Directories</h1>
-        <nav className="nav-links">
-          <Link to="/" className="nav-link">← Home</Link>
-          <Link to="/files" className="nav-link">Unassigned Files</Link>
-        </nav>
-      </header>
+      <Header title="All" highlightedText=" Directories" />
 
       {directories.length === 0 ? (
         <div className="empty-state">
           <span className="empty-icon">📂</span>
           <p>No directories created yet</p>
-          <Link to="/" className="create-link">
+          <Link to="/" className="upload-link">
             Create your first directory
           </Link>
         </div>
@@ -78,7 +75,7 @@ function DirectoriesPage() {
               <div className="directory-info">
                 <h3 className="directory-name">{dir.name}</h3>
                 <span className="file-count">
-                  {dir.files?.length || 0} file{(dir.files?.length || 0) !== 1 ? 's' : ''}
+                  {dir.fileCount} file{dir.fileCount !== 1 ? 's' : ''}
                 </span>
               </div>
               <div className="directory-arrow">→</div>

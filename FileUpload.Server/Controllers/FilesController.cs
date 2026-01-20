@@ -16,9 +16,6 @@ namespace FileUpload.Server.Controllers
             _db = db;
         }
 
-        /// <summary>
-        /// Get all files (metadata only, without binary content)
-        /// </summary>
         [HttpGet("files")]
         public async Task<ActionResult<IEnumerable<DataFile>>> GetFiles()
         {
@@ -28,9 +25,6 @@ namespace FileUpload.Server.Controllers
             return Ok(files);
         }
 
-        /// <summary>
-        /// Get a specific file by ID (metadata only)
-        /// </summary>
         [HttpGet("file/{id:guid}")]
         public async Task<ActionResult<DataFile>> GetFile(Guid id)
         {
@@ -46,9 +40,6 @@ namespace FileUpload.Server.Controllers
             return Ok(file);
         }
 
-        /// <summary>
-        /// Get file binary content for download
-        /// </summary>
         [HttpGet("file/{id:guid}/download")]
         public async Task<IActionResult> DownloadFile(Guid id)
         {
@@ -64,9 +55,6 @@ namespace FileUpload.Server.Controllers
             return File(file.Content.FileBytes, "application/octet-stream", $"{file.Name}");
         }
 
-        /// <summary>
-        /// Get file thumbnail
-        /// </summary>
         [HttpGet("file/{id:guid}/thumbnail")]
         public async Task<IActionResult> GetThumbnail(Guid id)
         {
@@ -82,9 +70,6 @@ namespace FileUpload.Server.Controllers
             return File(file.Content.ThumbnailBytes, "image/jpeg");
         }
 
-        /// <summary>
-        /// Get all files without a directory assigned
-        /// </summary>
         [HttpGet("files/unassigned")]
         public async Task<ActionResult<IEnumerable<DataFile>>> GetUnassignedFiles()
         {
@@ -94,9 +79,6 @@ namespace FileUpload.Server.Controllers
             return Ok(files);
         }
 
-        /// <summary>
-        /// Assign a file to a directory
-        /// </summary>
         [HttpPut("file/{id:guid}/directory")]
         public async Task<IActionResult> AssignFileToDirectory(Guid id, [FromBody] AssignDirectoryRequest request)
         {
@@ -121,9 +103,6 @@ namespace FileUpload.Server.Controllers
             return NoContent();
         }
 
-        /// <summary>
-        /// Delete a file
-        /// </summary>
         [HttpDelete("file/{id:guid}")]
         public async Task<IActionResult> DeleteFile(Guid id)
         {
@@ -136,7 +115,6 @@ namespace FileUpload.Server.Controllers
                 return NotFound();
             }
 
-            // Remove both file and content (cascade should handle content, but being explicit)
             if (file.Content != null)
             {
                 _db.FileContents.Remove(file.Content);
