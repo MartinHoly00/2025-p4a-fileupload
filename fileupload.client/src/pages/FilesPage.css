@@ -98,6 +98,18 @@
 .file-icon {
   font-size: 2rem;
   flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-thumbnail {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .file-info {
@@ -168,6 +180,10 @@
 .action-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   transform: scale(1.1);
+}
+
+.action-btn.delete:hover {
+  background: rgba(255, 100, 100, 0.2);
 }
 
 .files-count {

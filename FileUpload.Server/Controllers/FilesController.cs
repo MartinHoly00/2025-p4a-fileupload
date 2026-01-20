@@ -120,6 +120,32 @@ namespace FileUpload.Server.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Delete a file
+        /// </summary>
+        [HttpDelete("file/{id:guid}")]
+        public async Task<IActionResult> DeleteFile(Guid id)
+        {
+            var file = await _db.Files
+                .Include(f => f.Content)
+                .FirstOrDefaultAsync(f => f.Uuid == id);
+
+            if (file == null)
+            {
+                return NotFound();
+            }
+
+            // Remove both file and content (cascade should handle content, but being explicit)
+            if (file.Content != null)
+            {
+                _db.FileContents.Remove(file.Content);
+            }
+            _db.Files.Remove(file);
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 
     public class AssignDirectoryRequest

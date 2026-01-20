@@ -39,13 +39,14 @@ function FilesPage() {
     return new Date(dateString).toLocaleString();
   };
 
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+
+  const isImageFile = (extension: string) => {
+    return imageExtensions.includes(extension.toLowerCase());
+  };
+
   const getFileIcon = (extension: string) => {
     const icons: Record<string, string> = {
-      jpg: '🖼️',
-      jpeg: '🖼️',
-      png: '🖼️',
-      gif: '🖼️',
-      webp: '🖼️',
       pdf: '📄',
       doc: '📝',
       docx: '📝',
@@ -58,6 +59,26 @@ function FilesPage() {
       txt: '📃',
     };
     return icons[extension.toLowerCase()] || '📁';
+  };
+
+  const deleteFile = async (uuid: string, fileName: string) => {
+    if (!confirm(`Are you sure you want to delete "${fileName}"?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/file/${uuid}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setFiles(prev => prev.filter(f => f.uuid !== uuid));
+      } else {
+        alert('Failed to delete file');
+      }
+    } catch (err) {
+      alert('Error deleting file');
+    }
   };
 
   if (loading) {
@@ -98,7 +119,17 @@ function FilesPage() {
         <div className="files-grid">
           {files.map((file) => (
             <div key={file.uuid} className="file-card">
-              <div className="file-icon">{getFileIcon(file.extension)}</div>
+              <div className="file-icon">
+                {isImageFile(file.extension) ? (
+                  <img 
+                    src={`/api/file/${file.uuid}/thumbnail`} 
+                    alt={file.name}
+                    className="file-thumbnail"
+                  />
+                ) : (
+                  getFileIcon(file.extension)
+                )}
+              </div>
               <div className="file-info">
                 <h3 className="file-name" title={file.name}>
                   {file.name}
@@ -123,6 +154,13 @@ function FilesPage() {
                 >
                   ⬇️
                 </a>
+                <button
+                  onClick={() => deleteFile(file.uuid, file.name)}
+                  className="action-btn delete"
+                  title="Delete"
+                >
+                  🗑️
+                </button>
               </div>
             </div>
           ))}
