@@ -35,6 +35,13 @@ builder.Services.AddSingleton<ITusStore>(sp =>
 
 var app = builder.Build();
 
+// Configure CORS for development
+app.UseCors(policy => policy
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .WithExposedHeaders("Upload-Offset", "Location", "Upload-Length", "Tus-Resumable", "Tus-Version", "Tus-Extension", "Tus-Max-Size"));
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
@@ -47,73 +54,94 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapTus("/uploads", async httpContext =>
+app.MapTus("/upload", async httpContext =>
 {
     var tusStore = httpContext.RequestServices.GetRequiredService<ITusStore>();
 
     return new DefaultTusConfiguration
     {
         Store = tusStore,
-        UrlPath = "/uploads",
         MaxAllowedUploadSizeInBytesLong = 8 * 1024 * 1024 * 1024L,
 
         Events = new Events
-        {
-            // Called once upload is complete
-            OnFileCompleteAsync = async ctx =>
             {
-                var db = ctx.HttpContext.RequestServices.GetRequiredService<AppDbContext>();
-                var uploadId = ctx.FileId;
-
-                var filePath = Path.Combine("tus-state", uploadId);
-
-                var metadataString = await ((ITusCreationStore)ctx.Store).GetUploadMetadataAsync(ctx.FileId, ctx.CancellationToken);
-                var metadata = Metadata.Parse(metadataString);
-
-                var fileName = metadata.ContainsKey("filename")
-                    ? metadata["filename"].GetString(Encoding.UTF8)
-                    : "untitled";
-
-                var fileExt = Path.GetExtension(fileName)?.TrimStart('.').ToLower() ?? "unknown";
-
-                var allowedTypes = new[] { "jpg", "jpeg", "png" };
-                if (!allowedTypes.Contains(fileExt))
+                // Called once upload is complete
+                OnFileCompleteAsync = async ctx =>
                 {
+                    var db = ctx.HttpContext.RequestServices.GetRequiredService<AppDbContext>();
+                    var uploadId = ctx.FileId;
+
+                    var filePath = Path.Combine("tus-state", uploadId);
+
+                    var metadataString = await ((ITusCreationStore)ctx.Store).GetUploadMetadataAsync(ctx.FileId, ctx.CancellationToken);
+                    var metadata = Metadata.Parse(metadataString);
+
+                    var fileName = metadata.ContainsKey("filename")
+                        ? metadata["filename"].GetString(Encoding.UTF8)
+                        : "untitled";
+
+                    var fileType = metadata.ContainsKey("filetype")
+                        ? metadata["filetype"].GetString(Encoding.UTF8)
+                        : "application/octet-stream";
+
+                    var fileExt = Path.GetExtension(fileName)?.TrimStart('.').ToLower() ?? "unknown";
+
+                    var fileBytes = await File.ReadAllBytesAsync(filePath);
+                    
+                    // Generate thumbnail only for image files
+                    byte[] thumbnailBytes = Array.Empty<byte>();
+                    var imageExtensions = new[] { "jpg", "jpeg", "png", "gif", "bmp", "webp" };
+                    
+                    if (imageExtensions.Contains(fileExt))
+                    {
+                        try
+                        {
+                            using Image image = await Image.LoadAsync(filePath);
+                            var resizeOptions = new ResizeOptions
+                            {
+                                Mode = ResizeMode.Crop,
+                                Size = new Size(64, 64),
+                                Position = AnchorPositionMode.Center
+                            };
+                            image.Mutate(x => x.Resize(resizeOptions));
+
+                            using var ms = new MemoryStream();
+                            image.SaveAsJpeg(ms);
+                            thumbnailBytes = ms.ToArray();
+                        }
+                        catch
+                        {
+                            // If thumbnail generation fails, continue without thumbnail
+                        }
+                    }
+
+                    // Create FileContent entity for binary data
+                    var fileContent = new FileContent
+                    {
+                        Id = Guid.Parse(uploadId),
+                        FileBytes = fileBytes,
+                        ThumbnailBytes = thumbnailBytes
+                    };
+
+                    // Create DataFile entity for metadata
+                    var fileEntity = new DataFile
+                    {
+                        Uuid = Guid.Parse(uploadId),
+                        Name = fileName,
+                        Extension = fileExt,
+                        UploadTimestamp = DateTime.UtcNow,
+                        IsComplete = true,
+                        ContentId = fileContent.Id,
+                        Content = fileContent
+                    };
+
+                    db.FileContents.Add(fileContent);
+                    db.Files.Add(fileEntity);
+                    await db.SaveChangesAsync();
+
                     File.Delete(filePath);
-                    throw new InvalidOperationException("File type not allowed");
                 }
-
-                using Image image = await Image.LoadAsync(filePath);
-                var resizeOptions = new ResizeOptions
-                {
-                    Mode = ResizeMode.Crop,
-                    Size = new Size(64, 64),
-                    Position = AnchorPositionMode.Center
-                };
-                image.Mutate(x => x.Resize(resizeOptions));
-
-                using var ms = new MemoryStream();
-                image.SaveAsJpeg(ms);
-                var thumbnailBytes = ms.ToArray();
-
-                var fileBytes = await File.ReadAllBytesAsync(filePath);
-
-                var fileEntity = new DataFile
-                {
-                    Uuid = Guid.Parse(uploadId),
-                    Name = fileName,
-                    Extension = fileExt,
-                    UploadTimestamp = DateTime.UtcNow,
-                    FileBytes = fileBytes,
-                    ThumbnailBytes = thumbnailBytes
-                };
-
-                db.Files.Add(fileEntity);
-                await db.SaveChangesAsync();
-
-                File.Delete(filePath);
             }
-        }
     };
 });
 
