@@ -1,4 +1,4 @@
-.files-page {
+.directory-files-page {
   max-width: 900px;
   margin: 0 auto;
   padding: 40px 20px;
@@ -9,6 +9,27 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back-arrow {
+  font-size: 1.5rem;
+  color: #00d9ff;
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.back-arrow:hover {
+  background: rgba(0, 217, 255, 0.1);
 }
 
 .page-header h1 {
@@ -17,6 +38,12 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
 }
 
 .nav-link {
@@ -30,11 +57,6 @@
 
 .nav-link:hover {
   background: rgba(0, 217, 255, 0.1);
-}
-
-.nav-links {
-  display: flex;
-  gap: 1rem;
 }
 
 .loading,

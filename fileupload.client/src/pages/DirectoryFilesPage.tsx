@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import './FilesPage.css';
+import { Link, useParams } from 'react-router-dom';
+import './DirectoryFilesPage.css';
 
 interface FileMetadata {
   uuid: string;
@@ -8,26 +8,42 @@ interface FileMetadata {
   extension: string;
   uploadTimestamp: string;
   isComplete: boolean;
-  directoryId: number | null;
 }
 
-function FilesPage() {
+interface Directory {
+  id: number;
+  name: string;
+}
+
+function DirectoryFilesPage() {
+  const { id } = useParams<{ id: string }>();
   const [files, setFiles] = useState<FileMetadata[]>([]);
+  const [directory, setDirectory] = useState<Directory | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchFiles();
-  }, []);
+    if (id) {
+      fetchDirectoryAndFiles();
+    }
+  }, [id]);
 
-  const fetchFiles = async () => {
+  const fetchDirectoryAndFiles = async () => {
     try {
-      const response = await fetch('/api/files/unassigned');
-      if (!response.ok) {
-        throw new Error('Failed to fetch files');
+      const [dirResponse, filesResponse] = await Promise.all([
+        fetch(`/api/directory/${id}`),
+        fetch(`/api/directory/${id}/files`)
+      ]);
+      
+      if (!dirResponse.ok || !filesResponse.ok) {
+        throw new Error('Failed to fetch data');
       }
-      const data = await response.json();
-      setFiles(data);
+      
+      const dirData = await dirResponse.json();
+      const filesData = await filesResponse.json();
+      
+      setDirectory(dirData);
+      setFiles(filesData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -62,7 +78,7 @@ function FilesPage() {
 
   if (loading) {
     return (
-      <div className="files-page">
+      <div className="directory-files-page">
         <div className="loading">Loading files...</div>
       </div>
     );
@@ -70,28 +86,31 @@ function FilesPage() {
 
   if (error) {
     return (
-      <div className="files-page">
+      <div className="directory-files-page">
         <div className="error">Error: {error}</div>
       </div>
     );
   }
 
   return (
-    <div className="files-page">
+    <div className="directory-files-page">
       <header className="page-header">
-        <h1>📂 Unassigned Files</h1>
+        <div className="header-title">
+          <Link to="/directories" className="back-arrow">←</Link>
+          <h1>📂 {directory?.name || 'Directory'}</h1>
+        </div>
         <nav className="nav-links">
-          <Link to="/" className="nav-link">← Home</Link>
-          <Link to="/directories" className="nav-link">Directories</Link>
+          <Link to="/" className="nav-link">Home</Link>
+          <Link to="/directories" className="nav-link">All Directories</Link>
         </nav>
       </header>
 
       {files.length === 0 ? (
         <div className="empty-state">
           <span className="empty-icon">📭</span>
-          <p>No unassigned files</p>
+          <p>No files in this directory</p>
           <Link to="/" className="upload-link">
-            Upload files
+            Upload files to this directory
           </Link>
         </div>
       ) : (
@@ -136,4 +155,4 @@ function FilesPage() {
   );
 }
 
-export default FilesPage;
+export default DirectoryFilesPage;

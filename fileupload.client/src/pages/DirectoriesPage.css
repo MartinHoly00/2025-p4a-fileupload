@@ -1,4 +1,4 @@
-.files-page {
+.directories-page {
   max-width: 900px;
   margin: 0 auto;
   padding: 40px 20px;
@@ -9,6 +9,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .page-header h1 {
@@ -17,6 +19,12 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
 }
 
 .nav-link {
@@ -30,11 +38,6 @@
 
 .nav-link:hover {
   background: rgba(0, 217, 255, 0.1);
-}
-
-.nav-links {
-  display: flex;
-  gap: 1rem;
 }
 
 .loading,
@@ -60,7 +63,7 @@
   margin-bottom: 16px;
 }
 
-.upload-link {
+.create-link {
   display: inline-block;
   margin-top: 16px;
   color: #00d9ff;
@@ -71,42 +74,44 @@
   transition: all 0.2s;
 }
 
-.upload-link:hover {
+.create-link:hover {
   background: rgba(0, 217, 255, 0.1);
 }
 
-.files-grid {
+.directories-grid {
   display: grid;
   gap: 16px;
 }
 
-.file-card {
+.directory-card {
   display: flex;
   align-items: center;
   gap: 16px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
-  padding: 16px 20px;
+  padding: 20px 24px;
+  text-decoration: none;
+  color: inherit;
   transition: all 0.2s;
 }
 
-.file-card:hover {
+.directory-card:hover {
   background: rgba(255, 255, 255, 0.08);
   transform: translateX(4px);
 }
 
-.file-icon {
-  font-size: 2rem;
+.directory-icon {
+  font-size: 2.5rem;
   flex-shrink: 0;
 }
 
-.file-info {
+.directory-info {
   flex: 1;
   min-width: 0;
 }
 
-.file-name {
-  font-size: 1rem;
+.directory-name {
+  font-size: 1.25rem;
   font-weight: 500;
   margin: 0 0 4px 0;
   white-space: nowrap;
@@ -114,63 +119,23 @@
   text-overflow: ellipsis;
 }
 
-.file-details {
-  display: flex;
-  gap: 12px;
-  font-size: 0.85rem;
+.file-count {
+  font-size: 0.9rem;
   color: #888;
 }
 
-.file-ext {
-  background: rgba(0, 217, 255, 0.15);
+.directory-arrow {
+  font-size: 1.5rem;
   color: #00d9ff;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-family: monospace;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
-.file-status {
-  margin-top: 6px;
+.directory-card:hover .directory-arrow {
+  opacity: 1;
 }
 
-.status {
-  font-size: 0.8rem;
-}
-
-.status.complete {
-  color: #00ff88;
-}
-
-.status.pending {
-  color: #ffaa00;
-}
-
-.file-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.action-btn {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 1.2rem;
-  transition: all 0.2s;
-}
-
-.action-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.1);
-}
-
-.files-count {
+.directories-count {
   text-align: center;
   margin-top: 32px;
   color: #666;

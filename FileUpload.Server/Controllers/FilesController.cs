@@ -93,5 +93,37 @@ namespace FileUpload.Server.Controllers
                 .ToListAsync();
             return Ok(files);
         }
+
+        /// <summary>
+        /// Assign a file to a directory
+        /// </summary>
+        [HttpPut("file/{id:guid}/directory")]
+        public async Task<IActionResult> AssignFileToDirectory(Guid id, [FromBody] AssignDirectoryRequest request)
+        {
+            var file = await _db.Files.FindAsync(id);
+            if (file == null)
+            {
+                return NotFound();
+            }
+
+            if (request.DirectoryId.HasValue)
+            {
+                var directory = await _db.Directories.FindAsync(request.DirectoryId.Value);
+                if (directory == null)
+                {
+                    return BadRequest("Directory not found");
+                }
+            }
+
+            file.DirectoryId = request.DirectoryId;
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+        }
+    }
+
+    public class AssignDirectoryRequest
+    {
+        public int? DirectoryId { get; set; }
     }
 }

@@ -45,5 +45,46 @@ namespace FileUpload.Server.Controllers
 
             return Ok(directory);
         }
+
+        /// <summary>
+        /// Create a new directory
+        /// </summary>
+        [HttpPost("directories")]
+        public async Task<ActionResult<DataDirectory>> CreateDirectory([FromBody] CreateDirectoryRequest request)
+        {
+            var directory = new DataDirectory
+            {
+                Name = request.Name
+            };
+
+            _db.Directories.Add(directory);
+            await _db.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetDirectory), new { id = directory.Id }, directory);
+        }
+
+        /// <summary>
+        /// Get all files in a specific directory
+        /// </summary>
+        [HttpGet("directory/{id:int}/files")]
+        public async Task<ActionResult<IEnumerable<DataFile>>> GetDirectoryFiles(int id)
+        {
+            var directory = await _db.Directories.FindAsync(id);
+            if (directory == null)
+            {
+                return NotFound();
+            }
+
+            var files = await _db.Files
+                .Where(f => f.DirectoryId == id)
+                .ToListAsync();
+
+            return Ok(files);
+        }
+    }
+
+    public class CreateDirectoryRequest
+    {
+        public string Name { get; set; } = string.Empty;
     }
 }

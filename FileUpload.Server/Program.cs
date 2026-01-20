@@ -84,6 +84,22 @@ app.MapTus("/upload", async httpContext =>
                         ? metadata["filetype"].GetString(Encoding.UTF8)
                         : "application/octet-stream";
 
+                    // Parse optional directoryId from metadata
+                    int? directoryId = null;
+                    if (metadata.ContainsKey("directoryId"))
+                    {
+                        var dirIdStr = metadata["directoryId"].GetString(Encoding.UTF8);
+                        if (int.TryParse(dirIdStr, out var parsedDirId))
+                        {
+                            // Verify directory exists
+                            var dirExists = await db.Directories.AnyAsync(d => d.Id == parsedDirId);
+                            if (dirExists)
+                            {
+                                directoryId = parsedDirId;
+                            }
+                        }
+                    }
+
                     var fileExt = Path.GetExtension(fileName)?.TrimStart('.').ToLower() ?? "unknown";
 
                     var fileBytes = await File.ReadAllBytesAsync(filePath);
@@ -132,7 +148,8 @@ app.MapTus("/upload", async httpContext =>
                         UploadTimestamp = DateTime.UtcNow,
                         IsComplete = true,
                         ContentId = fileContent.Id,
-                        Content = fileContent
+                        Content = fileContent,
+                        DirectoryId = directoryId
                     };
 
                     db.FileContents.Add(fileContent);

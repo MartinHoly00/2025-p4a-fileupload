@@ -1,0 +1,269 @@
+.home-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #333;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: #4a90d9;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.nav-link:hover {
+  background-color: rgba(74, 144, 217, 0.1);
+}
+
+.directory-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.directory-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.directory-controls label {
+  font-weight: 500;
+  color: #555;
+}
+
+.directory-select {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.625rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  cursor: pointer;
+}
+
+.directory-select:focus {
+  outline: none;
+  border-color: #4a90d9;
+}
+
+.create-dir-btn {
+  padding: 0.625rem 1.25rem;
+  background: #4a90d9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.create-dir-btn:hover {
+  background: #3a7bc8;
+}
+
+.create-form {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.directory-input {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.directory-input:focus {
+  outline: none;
+  border-color: #4a90d9;
+}
+
+.create-btn {
+  padding: 0.625rem 1.5rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.create-btn:hover:not(:disabled) {
+  background: #218838;
+}
+
+.create-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.dropzone {
+  border: 3px dashed #ccc;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.dropzone.dragging {
+  border-color: #4a90d9;
+  background: rgba(74, 144, 217, 0.05);
+}
+
+.dropzone-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.dropzone-icon {
+  font-size: 3rem;
+}
+
+.dropzone-dir {
+  padding: 0.375rem 0.75rem;
+  background: #e3f2fd;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  color: #1976d2;
+}
+
+.dropzone-hint {
+  font-size: 0.875rem;
+  color: #999;
+}
+
+.uploads-list {
+  margin-top: 2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.uploads-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.uploads-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.clear-btn {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.clear-btn:hover {
+  background: #eee;
+}
+
+.upload-item {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.upload-item:last-child {
+  margin-bottom: 0;
+}
+
+.upload-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.upload-name {
+  font-weight: 500;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-status {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.upload-item.complete .upload-status {
+  color: #28a745;
+}
+
+.upload-item.error .upload-status {
+  color: #dc3545;
+}
+
+.progress-bar {
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4a90d9, #6bb3f0);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.upload-item.complete .progress-fill {
+  background: #28a745;
+}
+
+.upload-item.error .progress-fill {
+  background: #dc3545;
+}
